@@ -1,7 +1,7 @@
 #define TRIGPIN_1 12
 #define ECHOPIN_1 11
-#define TRIGPIN_2 5
-#define ECHOPIN_2 4
+#define TRIGPIN_2 10
+#define ECHOPIN_2 9
 
 //取得超音波的距離
 long getDistance(int trigpin, int echopin)

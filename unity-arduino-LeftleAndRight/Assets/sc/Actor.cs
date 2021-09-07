@@ -49,7 +49,7 @@ public class Actor : MonoBehaviour
                     readMessage = sArray[0];
                 }
 
-                //Debug.Log(readMessage);
+                Debug.Log(readMessage);
             }
             catch (Exception e)
             {

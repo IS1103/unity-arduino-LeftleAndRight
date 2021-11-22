@@ -1,0 +1,6 @@
+start-title.png
+size:2048,512
+filter:Linear,Linear
+pma:true
+start-title
+bounds:2,2,1352,365

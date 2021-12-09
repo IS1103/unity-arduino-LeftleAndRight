@@ -5,8 +5,5 @@ using UnityEngine;
 public class Item : MonoBehaviour
 {
     public int score;
-    void Start()
-    {
-        
-    }
+    public uint id;
 }

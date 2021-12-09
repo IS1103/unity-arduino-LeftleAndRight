@@ -1,0 +1,32 @@
+{ "skeleton": { "images": "E:/work/Project/unity-arduino-LeftleAndRight/LeftleAndRight/Assets/Art/cashier/images/" },
+"bones": [
+	{ "name": "root" }
+],
+"slots": [
+	{ "name": "pc", "bone": "root", "attachment": "pc" },
+	{ "name": "line", "bone": "root", "attachment": "line" },
+	{ "name": "emitter", "bone": "root", "attachment": "emitter" },
+	{ "name": "invoice", "bone": "root", "attachment": "invoice" },
+	{ "name": "invoice2", "bone": "root", "attachment": "invoice2" }
+],
+"skins": {
+	"default": {
+		"pc": {
+			"pc": { "x": 200, "y": -148, "width": 282, "height": 180 }
+		},
+		"line": {
+			"line": { "x": 298, "y": -214, "width": 52, "height": 30 }
+		},
+		"emitter": {
+			"emitter": { "x": 316, "y": -143, "width": 96, "height": 134 }
+		},
+		"invoice": {
+			"invoice": { "x": 95.5, "y": -153.5, "width": 63, "height": 63 }
+		},
+		"invoice2": {
+			"invoice2": { "x": 73.5, "y": -135.5, "width": 47, "height": 29 }
+		}
+	}
+},
+"animations": { "animation": {} }
+}

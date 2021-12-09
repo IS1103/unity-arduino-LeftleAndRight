@@ -14,11 +14,11 @@ public class GameUI : MonoBehaviour
 
     public void Open() 
     {
-        gameObject.SetActive(true);
+        //gameObject.SetActive(true);
     }
 
     internal void StartGame()
     {
-        startPanel.SetActive(false);
+        //startPanel.SetActive(false);
     }
 }

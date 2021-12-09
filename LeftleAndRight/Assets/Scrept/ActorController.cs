@@ -31,8 +31,7 @@ public class ActorController : MonoBehaviour
     public void StartGame() {
 
         gameObject.SetActive(true);
-        oriPos = transform.position;
-        transform.localPosition = oriPos;
+        SetOriPos();
     }
 
     public void GameOver() {
@@ -109,5 +108,10 @@ public class ActorController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         GameMain.OnItemTriggerActor?.Invoke(collision.gameObject);
+    }
+
+    public void SetOriPos()
+    {
+        transform.localPosition = oriPos;
     }
 }

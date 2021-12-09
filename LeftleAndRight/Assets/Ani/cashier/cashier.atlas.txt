@@ -1,0 +1,15 @@
+cashier.png
+size:512,256
+filter:Linear,Linear
+pma:true
+emitter
+bounds:286,67,96,134
+invoice
+bounds:286,2,63,63
+invoice2
+bounds:384,154,47,29
+rotate:90
+line
+bounds:351,35,52,30
+pc
+bounds:2,21,282,180

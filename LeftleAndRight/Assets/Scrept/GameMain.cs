@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
+
 
 public class GameMain : MonoBehaviour
 {
@@ -13,19 +15,26 @@ public class GameMain : MonoBehaviour
     public static GOPoolMono dropToFloorEffectPool;
     public static string readMessage;
     public static bool start;
+    public static AudioSource ShortAudio, BgAudio;
+    public static int score;
 
     public int targetSec;
     public float actorSpeed;
-    public int score;
     public Item[] items;
     public Transform[] locates;
     public Transform dropMoneyLocate;
     public GameObject getItemEffect;
+    public int[][] boughtItems; 
 
     public ActorController actorController;
     public GameUI gameUI;
     public Countdown countdown;
     public ArduinoConnector arduinoConnector;
+    public Cashier cashier;
+    public Transform itemParent;
+    public Inv inv;
+    public UnityEvent OnNoItemInScreen;
+    public AudioSource shortAudio, bgAudio;
 
     GameObject itemTemp;
     float dropDelay;
@@ -40,15 +49,19 @@ public class GameMain : MonoBehaviour
         arduinoConnector.receiveEvent = ArduinoReceive;
         OnItemDropOnFloor = this.OnItemDropOnFloorMethod;
         OnItemTriggerActor = this.OnItemTriggerActorEvent;
-        countdown.onArrivalTarget = this.OnGameOver;
-        countdown.target = targetSec;
+
+        ShortAudio = shortAudio;
+        BgAudio = bgAudio;
+
+        boughtItems = new int[16][];
+        for (int i = 0; i < boughtItems.Length; i++)
+            boughtItems[i] = new int[1];
     }
 
-    private void OnGameOver()
+    public void OnGameOver()
     {
         start = false;
         actorController.GameOver();
-        countdown.GameOver();
     }
 
     private void ArduinoReceive(string msg)
@@ -72,28 +85,37 @@ public class GameMain : MonoBehaviour
         Destroy(obj);
     }
 
+
     void OnItemTriggerActorEvent(GameObject obj)
     {
         if (start)
         {
-            score += obj.gameObject.GetComponent<Item>().score;
+            var boughtItem = obj.gameObject.GetComponent<Item>();
+            boughtItems[boughtItem.id][0]++;
+            score += boughtItem.score;
+            cashier.AddScore(score);
             actorController.ShowGetScore();
             Destroy(obj);
         }
     }
 
     [ContextMenu("PressStart")]
-    public void PressStart()
+    public void StartGame()
     {
+        for (int i = 0; i < boughtItems.Length; i++)
+            boughtItems[i][0] = 0;
         score = 0;
-
         gameUI.StartGame();
         actorController.StartGame();
-
-        countdown.Restart();
-
+        countdown.StartGame(targetSec);
         dropDelay = 0;
         start = true;
+        inv.totalScore.text = "";
+    }
+
+    public void NoItemInScreen() 
+    {
+        OnNoItemInScreen?.Invoke();
     }
 
     float temp;
@@ -109,6 +131,7 @@ public class GameMain : MonoBehaviour
                     locates[Random.Range(0, locates.Length)].position,
                     Quaternion.identity);
                 itemTemp.SetActive(true);
+                itemTemp.transform.SetParent(itemParent);
                 dropDelay = Random.Range(1f, 1.5f);
                 temp = 0;
             }
@@ -118,5 +141,10 @@ public class GameMain : MonoBehaviour
     void Restart()
     {
         
+    }
+
+    public void SetCounter() 
+    {
+        inv.SetCounter(boughtItems);
     }
 }

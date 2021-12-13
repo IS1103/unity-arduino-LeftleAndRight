@@ -17,6 +17,8 @@ public class GameMain : MonoBehaviour
     public static bool start;
     public static AudioSource ShortAudio, BgAudio;
     public static int score;
+    public float g = 0.1f;
+    public float r1 = 1,r = 1.5f;
 
     public int targetSec;
     public float actorSpeed;
@@ -24,10 +26,11 @@ public class GameMain : MonoBehaviour
     public Transform[] locates;
     public Transform dropMoneyLocate;
     public GameObject getItemEffect;
-    public int[][] boughtItems; 
+    public int[][] boughtItems;
+    public GameObject startOBJ;
+    public UnityEvent onOpenGame,onGetItem;
 
     public ActorController actorController;
-    public GameUI gameUI;
     public Countdown countdown;
     public ArduinoConnector arduinoConnector;
     public Cashier cashier;
@@ -41,8 +44,8 @@ public class GameMain : MonoBehaviour
 
     void Start()
     {
+        startOBJ.SetActive(true);
         start = false;
-        gameUI.Open();
         actorController.Open();
 
         dropToFloorEffectPool = GetComponent<GOPoolMono>();
@@ -56,6 +59,26 @@ public class GameMain : MonoBehaviour
         boughtItems = new int[16][];
         for (int i = 0; i < boughtItems.Length; i++)
             boughtItems[i] = new int[1];
+
+        onOpenGame?.Invoke();
+    }
+
+    public void SetG(float g) {
+        this.g = g; 
+    }
+
+    public void SetR2(float r)
+    {
+        this.r = r;
+    }
+
+    public void SetR1(float r)
+    {
+        this.r1 = r;
+    }
+
+    public static void PlayShortSound(AudioClip audioClip) {
+        ShortAudio.PlayOneShot(audioClip);
     }
 
     public void OnGameOver()
@@ -94,7 +117,8 @@ public class GameMain : MonoBehaviour
             boughtItems[boughtItem.id][0]++;
             score += boughtItem.score;
             cashier.AddScore(score);
-            actorController.ShowGetScore();
+            actorController.ShowGetScore(boughtItem.score);
+            onGetItem?.Invoke();
             Destroy(obj);
         }
     }
@@ -105,12 +129,14 @@ public class GameMain : MonoBehaviour
         for (int i = 0; i < boughtItems.Length; i++)
             boughtItems[i][0] = 0;
         score = 0;
-        gameUI.StartGame();
         actorController.StartGame();
         countdown.StartGame(targetSec);
         dropDelay = 0;
         start = true;
         inv.totalScore.text = "";
+        SetG(0.1f);
+        SetR1(1f);
+        SetR2(1.5f);
     }
 
     public void NoItemInScreen() 
@@ -130,9 +156,10 @@ public class GameMain : MonoBehaviour
                     items[Random.Range(0, items.Length)].gameObject,
                     locates[Random.Range(0, locates.Length)].position,
                     Quaternion.identity);
+                itemTemp.GetComponent<Rigidbody2D>().gravityScale = g;
                 itemTemp.SetActive(true);
                 itemTemp.transform.SetParent(itemParent);
-                dropDelay = Random.Range(1f, 1.5f);
+                dropDelay = Random.Range(r1, r);
                 temp = 0;
             }
         }

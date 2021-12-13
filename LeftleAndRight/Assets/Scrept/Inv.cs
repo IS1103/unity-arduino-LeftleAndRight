@@ -10,6 +10,7 @@ public class Inv : MonoBehaviour
     public Text totalScore;
     public Item[] items;
     public UnityEvent unityEvent;
+    public AudioClip sound, sound2;
     void Start()
     {
 
@@ -35,11 +36,13 @@ public class Inv : MonoBehaviour
             {
                 items[i].GetComponentInChildren<Text>().text = "X " + boughtItems[i][0].ToString();
                 items[i].gameObject.SetActive(true);
+                GameMain.PlayShortSound(sound);
                 yield return new WaitForSeconds(1);
             }
         }
 
         totalScore.text = GameMain.score.ToString();
+        GameMain.PlayShortSound(sound2);
         yield return new WaitForSeconds(1);
         unityEvent?.Invoke();
     }

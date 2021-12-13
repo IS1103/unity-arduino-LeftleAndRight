@@ -10,7 +10,8 @@ public class Countdown : MonoBehaviour
     public int target, sec;
     public float temp;
     public bool start;
-    public UnityEvent startEvent,endEvent;
+    public UnityEvent startEvent, endEvent,onOverH;
+    public Quaternion vector;
 
     void Start()
     {
@@ -18,7 +19,7 @@ public class Countdown : MonoBehaviour
     }
 
     [ContextMenu("Restart")]
-    public void StartGame(int target) 
+    public void StartGame(int target)
     {
         this.target = target;
         gameObject.SetActive(true);
@@ -28,18 +29,20 @@ public class Countdown : MonoBehaviour
         Play();
     }
 
-    public void Play() 
+    public void Play()
     {
+        overH = false;
         start = true;
         startEvent?.Invoke();
     }
 
-    public void GameOver() 
+    public void GameOver()
     {
         start = false;
         endEvent?.Invoke();
     }
 
+    bool overH;
     void Update()
     {
         if (start)
@@ -47,14 +50,24 @@ public class Countdown : MonoBehaviour
             temp += Time.deltaTime;
             if (temp > 1)
             {
+                vector = Quaternion.Euler(0, 0, (360 / target) * -(sec + temp * 2));
                 temp = 0;
-                pointer.parent.RotateAround(pointer.parent.position, -Vector3.forward, 360/ target);
+                pointer.parent.localRotation = vector;
+
                 sec++;
                 if (sec >= target)
                 {
+                    pointer.parent.localRotation = new Quaternion(0, 0, 0, 0);
                     GameMain.start = false;
                     temp = 0;
                     GameOver();
+                }
+
+                if (sec > (target / 3 * 2) && !overH)
+                {
+                    overH = true;
+                    GameMain.BgAudio.pitch = 1.09f;
+                    onOverH?.Invoke();
                 }
             }
         }

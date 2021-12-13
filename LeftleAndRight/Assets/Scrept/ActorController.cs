@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ActorController : MonoBehaviour
 {
@@ -11,8 +12,11 @@ public class ActorController : MonoBehaviour
         run
     }
 
+    public static GOPoolMono ScoreTXTEffectPool;
+
     public AnimationHandler animationHandler;
-    public GOPoolMono scoreEffectPool;
+    public GOPoolMono scoreEffectPool, scoreTXTEffectPool;
+    public GameObject txtScore,pp;
 
     public float runSpeed = 7f;
     public Vector3 input = default(Vector3);
@@ -26,6 +30,7 @@ public class ActorController : MonoBehaviour
         currentState = ActorState.Idle;
         previousState = currentState;
         animationHandler.PlayAni("idle");
+        ScoreTXTEffectPool = scoreTXTEffectPool;
     }
 
     public void StartGame() {
@@ -38,8 +43,8 @@ public class ActorController : MonoBehaviour
         animationHandler.PlayAni("idle");
     }
 
-    public void StopGame() { 
-    
+    public void StopGame() {
+
     }
 
     void Update()
@@ -99,10 +104,15 @@ public class ActorController : MonoBehaviour
         }
     }
 
-    internal void ShowGetScore()
+    internal void ShowGetScore(int score)
     {
         var _ = scoreEffectPool.Spawn();
         _.transform.localPosition = Vector3.zero;
+        
+        var txt = ScoreTXTEffectPool.Spawn();
+        txt.SetActive(true);
+        txt.GetComponent<Text>().text = score.ToString();
+        txt.transform.SetParent(pp.transform);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

@@ -31,6 +31,7 @@ public class CheckHaveItem : MonoBehaviour
                 events?.Invoke();
                 enabled = false;
                 _ = null;
+                GameMain.BgAudio.pitch = 1f;
             }
         }
     }

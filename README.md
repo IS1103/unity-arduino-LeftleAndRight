@@ -1,3 +1,4 @@
+[![License](https://img.shields.io/github/license/wsmd/ws-multipath.svg)](https://github.com/wsmd/ws-multipath/blob/master/LICENSE)
 # Unity And Arduino Game I
 
 ## 玩法
